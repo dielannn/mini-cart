@@ -14,7 +14,21 @@ const cartItems = ref([]);
 const STORAGE_KEY = "cart"
 
 // TODO: Fetch categories when the component is created
+onMounted( async () => {
 
+    let url = 'http://127.0.0.1:3000/categories'
+
+    try {
+        let response = await axios.get(url, {
+            params: {
+                
+            }
+        })
+    } catch (error) {
+
+    }
+
+})
 
 // TODO: Fetch items for the currently selected category
 async function getItems() {
