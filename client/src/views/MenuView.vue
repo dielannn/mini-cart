@@ -2,44 +2,48 @@
 import { ref, onMounted } from "vue";
 import ItemsBrowser from "../components/ItemsBrowser.vue";
 import axios from "axios";
-
-
 // Reactive data
 const categories = ref([])
 const selected_category = ref('fruit')
 const items = ref([])
 const cartItems = ref([]);
-
 // local storage
 const STORAGE_KEY = "cart"
-
 // TODO: Fetch categories when the component is created
-onMounted( async () => {
-
-    let url = 'http://127.0.0.1:3000/categories'
-
+onMounted(async () => {
+    let url = "http://127.0.0.1:3000/categories"
     try {
         let response = await axios.get(url, {
+            // you specify params based on the API documentation
             params: {
-                
             }
         })
-    } catch (error) {
-
+        console.log(response.data)
+        categories.value = response.data
+    } catch (e) {
+        console.log(e.message)
     }
-
 })
-
 // TODO: Fetch items for the currently selected category
 async function getItems() {
     // Add code
+    let url = "http://127.0.0.1:3000/items"
+    try {
+        let response = await axios.get(url, {
+            params: {
+                category : selected_category.value
+            }
+        })
+        items.value = response.data
+        console.log(items.value)
+    } catch(e) {
+        console.log(e.message)
+    }
 }
-
 // Add selected items to cart
 function doAddToCart(itemsToAdd) {
     for (const item of itemsToAdd) {
         let found = false;
-
         for (const cartItem of cartItems.value) {
             if (item.id == cartItem.id) {
                 found = true;
@@ -49,26 +53,18 @@ function doAddToCart(itemsToAdd) {
         }
         if (!found) cartItems.value.push(item);
     }
-
     // TODO: store current cartitems into local storage
     // cartItems.value is a JS (complex) obj. We need to use JSON.stringify to convert the JS obj to JSON string
-   
-    
 }
-
 </script>
-
 <template>
     <h1>Menu Items</h1>
-  
     <!-- TODO: Category selection dropdown -->
     <label for="categories">Categories</label>
-    <select class="form-control" id="categories" >
-        <option> category </option>
+    <select class="form-control" id="categories" v-model="selected_category" v-on:change="getItems" >
+        <option v-for="(category, idx) in categories" :key="idx" > {{ category }} </option>
     </select>
     <br>
-
-
     <div class="container-fluid">
         <div class="row p-3">
             <div class='col-md-6 text-center'>
@@ -78,7 +74,6 @@ function doAddToCart(itemsToAdd) {
                 </button>
             </div>
         </div>
-
         <div class="row row-cols-auto justify-content-end">
             <RouterLink to="/cart">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -89,7 +84,5 @@ function doAddToCart(itemsToAdd) {
             </RouterLink>
         </div>
     </div>
-
 </template>
-
 <style scoped></style>
