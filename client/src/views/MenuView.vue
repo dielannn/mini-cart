@@ -69,6 +69,7 @@ function doAddToCart(itemsToAdd) {
         <div class="row p-3">
             <div class='col-md-6 text-center'>
                 <!-- TODO: Show Items using ItemsBrowser-->
+                <ItemsBrowser :items></ItemsBrowser>
                 <button>
                     Add to Cart
                 </button>

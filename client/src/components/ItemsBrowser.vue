@@ -34,7 +34,7 @@ function doClick() {
                         </td>
                         <td>
                             <!-- Display subtotal for the item -->
-                            ${{ item.price * item.quantity  }}
+                            ${{ (item.price * item.quantity).toFixed(2)  }}
                         </td>
                     </tr>
                 </tbody>
